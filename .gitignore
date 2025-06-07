@@ -12,4 +12,4 @@ Dockerfile
 node_modules/
 
 # Ignore all generated templ.go files
-*/**templ.go
+**/*templ.go
