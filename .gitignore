@@ -1,0 +1,15 @@
+# Ignore example templates
+views-examples/
+
+# Ignore any env files
+.env*
+
+# Ignore all Docker artifacts
+docker-compose*.y*ml
+Dockerfile
+
+# Ignore all node artifacts
+node_modules/
+
+# Ignore all generated templ.go files
+*/**templ.go
