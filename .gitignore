@@ -13,3 +13,10 @@ node_modules/
 
 # Ignore all generated templ.go files
 **/*templ.go
+
+# Ignore the following directories
+bin/
+t*mp*/
+
+# Ignore various config files
+.air.toml

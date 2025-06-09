@@ -14,7 +14,7 @@ func main() {
 	r := chi.NewRouter()
 	r.Handle("/static/*", http.StripPrefix("/static/", fs))
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		err := pages.Home().Render(r.Context(), w)
+		err := pages.LoginPage().Render(r.Context(), w)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return

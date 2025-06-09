@@ -1,0 +1,14 @@
+package pages
+
+import "github.com/TheSeaGiraffe/attendance-tracker/views/components"
+
+templ UserHome() {
+	@components.Base() {
+		@components.NavBar()
+		<div class="px-6">
+			<h1 class="py-4 text-4xl semibold tracking-tight">
+				Temp. user page
+			</h1>
+		</div>
+	}
+}
