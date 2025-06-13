@@ -17,6 +17,7 @@ node_modules/
 # Ignore the following directories
 bin/
 t*mp*/
+tools/
 
 # Ignore various config files
 .air.toml
