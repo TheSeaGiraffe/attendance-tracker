@@ -9,46 +9,62 @@ import (
 	"github.com/TheSeaGiraffe/attendance-tracker/controllers"
 	"github.com/TheSeaGiraffe/attendance-tracker/database/queries"
 	"github.com/TheSeaGiraffe/attendance-tracker/services"
+	"github.com/alexedwards/scs/pgxstore"
+	"github.com/alexedwards/scs/v2"
 	"github.com/go-chi/chi/v5"
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 func main() {
-	// Setup database connection
-	// Basic one for now with no pooling. Just want to make sure everything is working first.
+	// TODO: need to check that the app is actually connected to the DB
+	// Set up database connection pool. Use defaults for now.
 	dbConfig := config.DefaultConfig()
-	dbConn, err := pgx.Connect(context.Background(), dbConfig.String())
+	dbPool, err := pgxpool.New(context.Background(), dbConfig.String())
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer dbConn.Close(context.Background())
-	sqlcQuery := queries.New(dbConn)
+	defer dbPool.Close()
+	sqlcQuery := queries.New(dbPool)
 
 	// Init services and controllers
 	userService := &services.UserService{
 		DB: sqlcQuery,
 	}
 
+	sessionManager := scs.New() // this is practically a service
+	sessionManager.Store = pgxstore.New(dbPool)
+	sessionManager.Cookie.Secure = true
+
 	usersC := controllers.Users{
-		UserService: userService,
+		UserService:    userService,
+		SessionManager: sessionManager,
+	}
+
+	umw := controllers.UserMiddleware{
+		SessionManager: sessionManager,
 	}
 
 	// Setup routes
 	fs := http.FileServer(http.Dir("static"))
 
 	r := chi.NewRouter()
+
+	r.Use(sessionManager.LoadAndSave)
+
 	r.Handle("/static/*", http.StripPrefix("/static/", fs))
 
-	// What I might do here is create a fake home page handler that just redirects to the login page.
-	// Will leave it like this for now.
-	r.Get("/", usersC.LogIn)
-	r.Post("/", usersC.ProcessLogIn)
+	r.Get("/", usersC.Home) // Not sure if this is the proper way to do it.
+	r.Get("/login", usersC.LogIn)
+	r.Post("/login", usersC.ProcessLogIn)
+	r.Post("/logout", usersC.ProcessLogOut)
 
 	r.Route("/users", func(r chi.Router) {
+		r.Use(umw.RequireUser)
 		r.Get("/", usersC.UserHome)
 	})
 
 	r.Route("/admin", func(r chi.Router) {
+		r.Use(umw.RequireUser)
 		r.Get("/", usersC.AdminHome)
 	})
 

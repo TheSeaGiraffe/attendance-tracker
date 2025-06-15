@@ -1,17 +1,21 @@
 package components
 
-templ NavBar() {
+templ NavBar(showLogout bool) {
 	<header class="bg-gradient-to-r from-green-800 to-emerald-800 text-white">
 		<nav class="px-8 py-6 flex items-center space-x-12">
 			<div class="text-3xl font-serif">Agrisoft-Systems Attendance</div>
 			<div class="flex-grow"></div>
-			<div class="space-x-4">
-				// <a href="/signin" class="pr-4">Sign in</a>
-				<a href="/signin" class="px-4 py-2 bg-green-700 hover:bg-green-600 rounded">
-					//Sign up
-					Sign in
-				</a>
-			</div>
+			if showLogout {
+				<div class="space-x-4">
+					//<a href="/logout" class="px-4 py-2 bg-green-700 hover:bg-green-600 rounded">
+					//Sign out
+					//</a>
+					<form action="/logout" method="post" class="inline pr-4">
+						//<div class="hidden">{{csrfField}}</div>
+						<button type="submit">Sign out</button>
+					</form>
+				</div>
+			}
 		</nav>
 	</header>
 }

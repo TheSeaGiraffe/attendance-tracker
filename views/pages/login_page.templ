@@ -2,15 +2,15 @@ package pages
 
 import "github.com/TheSeaGiraffe/attendance-tracker/views/components"
 
-templ LoginPage(email string) {
+templ LoginPage(email string, showLogout bool) {
 	@components.Base() {
-		@components.NavBar()
+		@components.NavBar(showLogout)
 		<div class="py-12 flex justify-center">
 			<div class="px-8 py-8 bg-white rounded shadow">
 				<h1 class="pt-4 pb-8 text-center text-3xl font-bold text-gray-900">
 					Welcome back!
 				</h1>
-				<form action="/" method="post">
+				<form action="/login" method="post">
 					<div class="py-2">
 						<label for="email" class="text-sm font-semibold text-gray-800">Email Address</label>
 						<input
