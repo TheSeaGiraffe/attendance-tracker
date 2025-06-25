@@ -21,6 +21,10 @@ run_gen: gogen tailwindcss
 build_gen: gogen tailwindcss
     go build -o attendance-tracker cmd/attendance-tracker/main.go
 
+# Check status of migrations
+migrate_status:
+    goose status
+
 # Run all migrations
 migrate_up_all:
     goose up

@@ -2,9 +2,9 @@ package pages
 
 import "github.com/TheSeaGiraffe/attendance-tracker/views/components"
 
-templ AdminHome(showLogout bool) {
+templ AdminHome(showSignOut bool) {
 	@components.Base() {
-		@components.NavBar(showLogout)
+		@components.NavBar(showSignOut)
 		<div class="px-6">
 			<h1 class="py-4 text-4xl semibold tracking-tight">
 				Temp. admin page

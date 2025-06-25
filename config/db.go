@@ -11,6 +11,9 @@ const (
 	sslMode  = "disable"
 )
 
+// All of this should not be in "config". Will move this to a "database" package
+// later
+
 type DBConfig struct {
 	Host     string
 	Port     string
