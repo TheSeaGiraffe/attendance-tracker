@@ -8,6 +8,7 @@ import (
 
 	"github.com/TheSeaGiraffe/attendance-tracker/config"
 	"github.com/TheSeaGiraffe/attendance-tracker/controllers"
+	"github.com/TheSeaGiraffe/attendance-tracker/database"
 	"github.com/TheSeaGiraffe/attendance-tracker/database/queries"
 	"github.com/TheSeaGiraffe/attendance-tracker/services"
 	"github.com/alexedwards/scs/pgxstore"
@@ -26,7 +27,7 @@ func main() {
 
 	// TODO: need to check that the app is actually connected to the DB
 	// Set up database connection pool. Use defaults for now.
-	dbConfig := config.DefaultConfig()
+	dbConfig := database.DefaultConfig()
 	dbPool, err := pgxpool.New(context.Background(), dbConfig.String())
 	if err != nil {
 		log.Fatalf("could not create database connection pool: %v", err)
@@ -49,7 +50,8 @@ func main() {
 
 	// TODO: add error handling for the case where the API key isn't provided. Should probably
 	// either panic or otherwise force the server to exit
-	emailService := services.NewEmailService(os.Getenv("MAILERSEND_API_KEY"))
+	emailCfg := config.NewEmailConfig(os.Getenv("MAILERSEND_NAME"), os.Getenv("MAILERSEND_EMAIL"))
+	emailService := services.NewEmailService(os.Getenv("MAILERSEND_API_KEY"), emailCfg)
 
 	usersC := controllers.Users{
 		UserService:          userService,

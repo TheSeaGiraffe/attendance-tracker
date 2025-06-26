@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/TheSeaGiraffe/attendance-tracker/config"
 	"github.com/mailersend/mailersend-go"
 )
 
 const (
-	// DefaultSenderEmail = "support@agrisoft-systems.com"
-	DefaultSenderEmail = "MS_qxfvO4@test-dnvo4d92p5ng5r86.mlsender.net"
-	DefaultSenderName  = "Thy Dungeonman"
+	DefaultSenderEmail = "support@agrisoft-systems.com"
+	DefaultSenderName  = "Agrisoft Support"
 )
 
 type EmailToFromHeader struct {
@@ -34,8 +34,9 @@ type EmailService struct {
 	MailerSendClient *mailersend.Mailersend
 }
 
-func NewEmailService(apiKey string) *EmailService {
+func NewEmailService(apiKey string, config config.EmailConfig) *EmailService {
 	return &EmailService{
+		DefaultSender:    mailersend.Recipient{Name: config.SenderName, Email: config.SenderEmail},
 		MailerSendClient: mailersend.NewMailersend(apiKey),
 	}
 }
